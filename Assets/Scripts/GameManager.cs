@@ -1,24 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    // Variables
+    [SerializeField] int score = 0;
+    [SerializeField] TMP_Text timeCount;
+    [SerializeField] TMP_Text scoreCount;
+    [SerializeField] TMP_Text highscoreCount;
+
+    const string _highscore = "highscore";
+    const float _levelTime = 20f;
+    float timeRemaining = 0f;
+
     // Singleton Setup
-    public static GameManager instance;
+    public static GameManager Instance;
 
     private void Awake()
     {
-        if (instance != null) { Destroy(gameObject); }
-        else { instance = this; }
+        // Singleton Setup
+        if (Instance != null) { Destroy(gameObject); }
+        else { Instance = this; }
 
-        // Persists through Scene changes
+        // Singleton Persists through Scene changes
         DontDestroyOnLoad(gameObject);
-    }
 
-    // Variables
-    [SerializeField] int score = 0;
-    const string _highscore = "highscore";
+        // Update UI
+        UpdateScoreUI();
+    }
 
     public int GetHighscore()
     {
@@ -38,6 +49,18 @@ public class GameManager : MonoBehaviour
         {
             // Saves new highscore
             PlayerPrefs.SetInt(_highscore, newHighscore);
+
+            // Update UI
+            UpdateScoreUI();
         }
+    }
+
+    /// <summary>
+    /// Updates both the scores UI
+    /// </summary>
+    void UpdateScoreUI()
+    {
+        highscoreCount.text = GetHighscore().ToString();
+        scoreCount.text = score.ToString();
     }
 }
