@@ -904,7 +904,7 @@ MonoBehaviour:
   rotationSpeed: 3
   maxThrustSpeed: 10
   maxRotationSpeed: 5
-  inputAllowed: 1
+  inputAllowed: 0
 --- !u!1 &353948202
 GameObject:
   m_ObjectHideFlags: 0

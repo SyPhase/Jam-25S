@@ -37,7 +37,6 @@ public class Ship : MonoBehaviour
         if (!inputAllowed) { return; }
 
         rb.AddRelativeForce(0f, inputHorizontal * thrustSpeed, 0f);
-        //rb.AddRelativeTorque(0f, 0f, inputVertical * rotationSpeed);
 
         if (inputVertical < 0.1f && inputVertical > -0.1f)
         {
@@ -56,7 +55,5 @@ public class Ship : MonoBehaviour
         {
             rb.drag = 0f;
         }
-
-        //Debug.Log(rb.velocity + ", " + rb.angularVelocity);
     }
 }
