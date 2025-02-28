@@ -25,7 +25,7 @@ public class Ship : MonoBehaviour
 
     void Update()
     {
-        inputVertical = -Input.GetAxisRaw("Horizontal");
+        inputVertical = -Input.GetAxis("Horizontal");
         inputHorizontal = Input.GetAxisRaw("Vertical");
 
         // idk why the input axis are swapped...
@@ -37,15 +37,15 @@ public class Ship : MonoBehaviour
         if (!inputAllowed) { return; }
 
         rb.AddRelativeForce(0f, inputHorizontal * thrustSpeed, 0f);
-        rb.AddRelativeTorque(0f, 0f, inputVertical * rotationSpeed);
+        //rb.AddRelativeTorque(0f, 0f, inputVertical * rotationSpeed);
 
         if (inputVertical < 0.1f && inputVertical > -0.1f)
         {
-            rb.angularDrag = rotationSpeed;
+            rb.angularVelocity = Vector3.zero;
         }
         else
         {
-            rb.angularDrag = 0.1f;
+            rb.angularVelocity = new Vector3(0f, 0f, inputVertical * rotationSpeed);
         }
 
         if (inputHorizontal < 0.1f && inputHorizontal > -0.1f)
@@ -57,6 +57,6 @@ public class Ship : MonoBehaviour
             rb.drag = 0f;
         }
 
-        Debug.Log(rb.velocity + ", " + rb.angularVelocity);
+        //Debug.Log(rb.velocity + ", " + rb.angularVelocity);
     }
 }
