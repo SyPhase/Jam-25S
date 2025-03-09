@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject gameOver;
     [SerializeField] GameObject newHighscore;
     [SerializeField] TMP_Text countdownText;
+    [SerializeField] TMP_Text livesCount;
+
+    int lives = 3;
+    int level = 1;
 
     const string _highscore = "highscore";
     const float _levelTime = 30f;
@@ -107,7 +111,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Does Game Over logic and brings us back to Main Menu
     /// </summary>
-    public void LevelFailed()
+    void LevelFailed()
     {
         StartCoroutine(DoLevelFailed());
     }
@@ -119,6 +123,7 @@ public class GameManager : MonoBehaviour
     {
         // Stop level
         isLevelStarted = false;
+        currentShip.ActivateShip(false);
 
         // Try to set new highscore (only works if higher)
         bool isNewHighscore = SetHighscore(score);
@@ -144,7 +149,15 @@ public class GameManager : MonoBehaviour
 
     void LevelSucceeded()
     {
+        level++;
 
+        if (lives < 3 && level % 3 == 0)
+        {
+            lives++;
+            UpdateLivesUI();
+        }
+
+        // TODO : Load next Scene
     }
 
     /// <summary>
@@ -153,7 +166,21 @@ public class GameManager : MonoBehaviour
     /// <param name="points">Points to add to score</param>
     public void AddPoints(int points)
     {
-        score += points;
+        score += points * level;
+    }
+
+    /// <summary>
+    /// Removes one life
+    /// </summary>
+    public void RemoveLife()
+    {
+        lives--;
+        UpdateLivesUI();
+
+        if (lives <= 0)
+        {
+            LevelFailed();
+        }
     }
 
     /// <summary>
@@ -196,6 +223,29 @@ public class GameManager : MonoBehaviour
     {
         highscoreCount.text = GetHighscore().ToString();
         scoreCount.text = score.ToString();
+    }
+
+    /// <summary>
+    /// Updates lives UI
+    /// </summary>
+    void UpdateLivesUI()
+    {
+        if (lives == 3)
+        {
+            livesCount.text = "X X X";
+        }
+        else if (lives == 2)
+        {
+            livesCount.text = "X X";
+        }
+        else if (lives == 1)
+        {
+            livesCount.text = "X";
+        }
+        else
+        {
+            livesCount.text = "";
+        }
     }
 
     /// <summary>

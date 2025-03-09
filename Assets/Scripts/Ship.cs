@@ -69,6 +69,20 @@ public class Ship : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Finish"))
+        {
+            // TODO : make ShipManager to spawn ships
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // TODO : Remove a "life"
+        GameManager.Instance.RemoveLife();
+    }
+
     /// <summary>
     /// Waits for number of seconds inputted
     /// </summary>
