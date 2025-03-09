@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] TMP_Text highscoreCount;
 
     const string _highscore = "highscore";
+    bool keyPressed = false;
 
     void Awake()
     {
@@ -18,6 +19,11 @@ public class MenuManager : MonoBehaviour
     void Update()
     {
         if (Input.anyKeyDown)
+        {
+            keyPressed = true;
+        }
+
+        if (keyPressed && Time.time > 3.0f)
         {
             SceneManager.LoadScene(1);
         }
