@@ -23,6 +23,18 @@ public class Ship : MonoBehaviour
         rb.maxAngularVelocity = maxRotationSpeed;
     }
 
+    void OnEnable()
+    {
+        //Debug.Log("Ship is Enabling...");
+
+        StartCoroutine(EnableAfterSeconds(1));
+    }
+
+    public void ActivateShip(bool activate)
+    {
+        inputAllowed = activate;
+    }
+
     void Update()
     {
         inputVertical = -Input.GetAxis("Horizontal");
@@ -55,5 +67,18 @@ public class Ship : MonoBehaviour
         {
             rb.drag = 0f;
         }
+    }
+
+    /// <summary>
+    /// Waits for number of seconds inputted
+    /// </summary>
+    /// <param name="seconds">seconds to wait</param>
+    /// <returns></returns>
+    IEnumerator EnableAfterSeconds(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+
+        GameManager.Instance.TryStartLevel(this);
+        //Debug.Log("Ship is Enabled!");
     }
 }

@@ -13,19 +13,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text highscoreCount;
     [SerializeField] GameObject gameOver;
     [SerializeField] GameObject newHighscore;
+    [SerializeField] TMP_Text countdownText;
 
     const string _highscore = "highscore";
-    const float _levelTime = 20f;
+    const float _levelTime = 30f;
     float timeRemaining = 0f;
+
+    bool isLevelStarted = false;
+    Ship currentShip;
 
     // Singleton Setup
     public static GameManager Instance;
 
-    private void Awake()
+    void Awake()
     {
         // Singleton Setup
         if (Instance != null) { Destroy(gameObject); }
         else { Instance = this; }
+
+        //Debug.Log("Instance is set!");
 
         // Singleton Persists through Scene changes
         DontDestroyOnLoad(gameObject);
@@ -34,11 +40,86 @@ public class GameManager : MonoBehaviour
         UpdateScoreUI();
     }
 
+    void Update()
+    {
+        // if level is NOT started
+        if (!isLevelStarted) { return; }
+
+        // if ran out of time
+        if (timeRemaining < 0f) { LevelFailed(); }
+
+        // Subtract time passed
+        timeRemaining -= Time.deltaTime;
+
+        // Update Timer UI
+        timeCount.text = ((int)timeRemaining).ToString();
+    }
+
+    /// <summary>
+    /// Tries to start the level, activates spaceship either way
+    /// </summary>
+    /// <param name="sender">ship object's Ship component</param>
+    public void TryStartLevel(Ship sender)
+    {
+        StartCoroutine(DoTryStartLevel(sender));
+    }
+
+    /// <summary>
+    /// Tries to start the level, activates spaceship either way
+    /// </summary>
+    /// <param name="sender">ship object's Ship component</param>
+    IEnumerator DoTryStartLevel(Ship sender)
+    {
+        //Debug.Log("Trying to start level...");
+
+        currentShip = sender;
+
+        // If level is NOT started, start it
+        if (!isLevelStarted)
+        {
+            // Level countdown
+            countdownText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1);
+            countdownText.text = "2...";
+            yield return new WaitForSeconds(1);
+            countdownText.text = "1...";
+            yield return new WaitForSeconds(1);
+            countdownText.text = "Park!";
+            yield return new WaitForSeconds(1);
+            countdownText.text = "3...";
+            countdownText.gameObject.SetActive(false);
+
+            // Set timeRemaining
+            timeRemaining = _levelTime;
+
+            // Start Level
+            isLevelStarted = true;
+
+            // Activate Spaceship
+            currentShip.ActivateShip(true);
+        }
+        else // if level is started, activate ship controls
+        {
+            currentShip.ActivateShip(true);
+        }
+    }
+
     /// <summary>
     /// Does Game Over logic and brings us back to Main Menu
     /// </summary>
     public void LevelFailed()
     {
+        StartCoroutine(DoLevelFailed());
+    }
+
+    /// <summary>
+    /// Does Game Over logic and brings us back to Main Menu
+    /// </summary>
+    IEnumerator DoLevelFailed()
+    {
+        // Stop level
+        isLevelStarted = false;
+
         // Try to set new highscore (only works if higher)
         bool isNewHighscore = SetHighscore(score);
 
@@ -49,8 +130,8 @@ public class GameManager : MonoBehaviour
             newHighscore.SetActive(true);
         }
 
-        // Wait five seconds
-        StartCoroutine(WaitSeconds(5));
+        // Wait a few seconds
+        yield return new WaitForSeconds(10);
 
         // Deactivate Game Over UI
         newHighscore.SetActive(false);
@@ -58,16 +139,12 @@ public class GameManager : MonoBehaviour
 
         // Return to Menu
         SceneManager.LoadScene(0);
+        Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Waits for number of seconds inputted
-    /// </summary>
-    /// <param name="seconds">seconds to wait</param>
-    /// <returns></returns>
-    IEnumerator WaitSeconds(int seconds)
+    void LevelSucceeded()
     {
-        yield return new WaitForSeconds(seconds);
+
     }
 
     /// <summary>
@@ -119,5 +196,15 @@ public class GameManager : MonoBehaviour
     {
         highscoreCount.text = GetHighscore().ToString();
         scoreCount.text = score.ToString();
+    }
+
+    /// <summary>
+    /// Waits for number of seconds inputted
+    /// </summary>
+    /// <param name="seconds">seconds to wait</param>
+    /// <returns></returns>
+    IEnumerator WaitSeconds(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
     }
 }
