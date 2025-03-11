@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Ship : MonoBehaviour
 {
     [SerializeField] float thrustSpeed = 10f;
@@ -23,11 +24,9 @@ public class Ship : MonoBehaviour
         rb.maxAngularVelocity = maxRotationSpeed;
     }
 
-    void OnEnable()
+    public void EnableAfterSeconds(int seconds = 0)
     {
-        //Debug.Log("Ship is Enabling...");
-
-        StartCoroutine(EnableAfterSeconds(1));
+        StartCoroutine(DoEnableAfterSeconds(seconds));
     }
 
     public void ActivateShip(bool activate)
@@ -90,7 +89,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     /// <param name="seconds">seconds to wait</param>
     /// <returns></returns>
-    IEnumerator EnableAfterSeconds(int seconds)
+    IEnumerator DoEnableAfterSeconds(int seconds)
     {
         yield return new WaitForSeconds(seconds);
 

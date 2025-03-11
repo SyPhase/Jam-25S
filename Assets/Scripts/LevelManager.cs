@@ -9,13 +9,22 @@ public class LevelManager : MonoBehaviour
     int shipsParked = 0;
     int currentLevel;
 
+    List<Ship> ships = new List<Ship>();
+
     void Start()
     {
         currentLevel = SceneManager.GetActiveScene().buildIndex;
+
+        ships.AddRange(FindObjectsOfType<Ship>(true));
+
+        ships[0].EnableAfterSeconds(1);
     }
 
     public void ParkedShip()
     {
+        // Disable current ship
+        ships[shipsParked].gameObject.SetActive(false);
+
         // iterate shipsParked
         shipsParked++;
 
@@ -32,7 +41,10 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            // TODO : Spawn new ship
+            // TODO : Spawn/Activate new ship
+            int nextShipIndex = shipsParked % shipsToPark;
+            ships[nextShipIndex].gameObject.SetActive(true);
+            ships[nextShipIndex].EnableAfterSeconds();
         }
     }
 }
