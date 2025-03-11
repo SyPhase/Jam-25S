@@ -73,14 +73,16 @@ public class Ship : MonoBehaviour
     {
         if (other.CompareTag("Finish"))
         {
-            // TODO : make ShipManager to spawn ships
+            // TODO : make LevelManager or ShipManager to spawn ships
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // TODO : Remove a "life"
+        // Removes a "life"
         GameManager.Instance.RemoveLife();
+
+        // TODO : Add voice line SFX here
     }
 
     /// <summary>

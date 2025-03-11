@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void LevelSucceeded()
+    public void TryLevelSucceeded()
     {
         level++;
 
@@ -232,19 +232,38 @@ public class GameManager : MonoBehaviour
     {
         if (lives == 3)
         {
-            livesCount.text = "X X X";
+            livesCount.text = "";
         }
         else if (lives == 2)
         {
-            livesCount.text = "X X";
+            livesCount.text = "X";
+            StartCoroutine(FlashLives(1));
         }
         else if (lives == 1)
         {
-            livesCount.text = "X";
+            livesCount.text = "X X";
+            StartCoroutine(FlashLives(2));
         }
         else
         {
-            livesCount.text = "";
+            livesCount.text = "X X X";
+            StartCoroutine(FlashLives(3));
+        }
+    }
+
+    /// <summary>
+    /// Flashes lives a few times
+    /// </summary>
+    /// <param name="urgency">Higher number flashes faster but more times</param>
+    /// <returns></returns>
+    IEnumerator FlashLives(int urgency)
+    {
+        for (int i = 0; i < urgency * 3; i++)
+        {
+            yield return new WaitForSeconds(0.4f / urgency);
+            livesCount.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.3f / urgency);
+            livesCount.gameObject.SetActive(true);
         }
     }
 
