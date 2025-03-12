@@ -157,7 +157,9 @@ public class GameManager : MonoBehaviour
             UpdateLivesUI();
         }
 
-        // TODO : Load next Scene
+        // TODO : Don't load past final level
+        // Load next Scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     /// <summary>

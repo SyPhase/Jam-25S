@@ -20,11 +20,11 @@ public class Ship : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        //rb.maxLinearVelocity = maxThrustSpeed;
+        rb.maxLinearVelocity = maxThrustSpeed;
         rb.maxAngularVelocity = maxRotationSpeed;
     }
 
-    public void EnableAfterSeconds(int seconds = 0)
+    public void EnableAfterSeconds(float seconds = 0f)
     {
         StartCoroutine(DoEnableAfterSeconds(seconds));
     }
@@ -68,6 +68,7 @@ public class Ship : MonoBehaviour
         }
     }
 
+    /*
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Finish"))
@@ -75,6 +76,7 @@ public class Ship : MonoBehaviour
             // TODO : make LevelManager or ShipManager to spawn ships
         }
     }
+    */
 
     void OnCollisionEnter(Collision collision)
     {
@@ -89,7 +91,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     /// <param name="seconds">seconds to wait</param>
     /// <returns></returns>
-    IEnumerator DoEnableAfterSeconds(int seconds)
+    IEnumerator DoEnableAfterSeconds(float seconds)
     {
         yield return new WaitForSeconds(seconds);
 

@@ -9,7 +9,20 @@ public class LevelManager : MonoBehaviour
     int shipsParked = 0;
     int currentLevel;
 
+    [SerializeField] List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
+    int nextSpawnIndex = 0;
+
     List<Ship> ships = new List<Ship>();
+
+    // Singleton Setup
+    public static LevelManager Instance;
+
+    void Awake()
+    {
+        // Singleton Setup
+        if (Instance != null) { Destroy(Instance); }
+        Instance = this;
+    }
 
     void Start()
     {
@@ -17,6 +30,9 @@ public class LevelManager : MonoBehaviour
 
         ships.AddRange(FindObjectsOfType<Ship>(true));
 
+        ships[0].transform.SetPositionAndRotation(spawnPoints[nextSpawnIndex].transform.position, spawnPoints[nextSpawnIndex].transform.rotation);
+        nextSpawnIndex = (nextSpawnIndex + 1) % (spawnPoints.Count - 1);
+        ships[0].gameObject.SetActive(true);
         ships[0].EnableAfterSeconds(1);
     }
 
@@ -28,23 +44,25 @@ public class LevelManager : MonoBehaviour
         // iterate shipsParked
         shipsParked++;
 
-        // TODO : Add Score
+        // Add Score
         GameManager.Instance.AddPoints(currentLevel * 1000); // Points for Parking Ship
 
         if (shipsParked >= shipsToPark)
         {
-            // TODO : Add Score
+            // Add Score
             GameManager.Instance.AddPoints(currentLevel * 5000); // Points for completing Level
 
-            // TODO : Next Level
+            // Next Level
             GameManager.Instance.TryLevelSucceeded();
         }
         else
         {
             // TODO : Spawn/Activate new ship
             int nextShipIndex = shipsParked % shipsToPark;
+            ships[nextShipIndex].transform.SetPositionAndRotation(spawnPoints[nextSpawnIndex].transform.position, spawnPoints[nextSpawnIndex].transform.rotation);
+            nextSpawnIndex = (nextSpawnIndex + 1) % (spawnPoints.Count);
             ships[nextShipIndex].gameObject.SetActive(true);
-            ships[nextShipIndex].EnableAfterSeconds();
+            ships[nextShipIndex].EnableAfterSeconds(0.1f);
         }
     }
 }
