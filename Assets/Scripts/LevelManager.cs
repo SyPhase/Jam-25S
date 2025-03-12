@@ -6,13 +6,12 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] int shipsToPark = 3;
+    [SerializeField] List<Ship> ships = new List<Ship>();
     int shipsParked = 0;
     int currentLevel;
 
     [SerializeField] List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
     int nextSpawnIndex = 0;
-
-    List<Ship> ships = new List<Ship>();
 
     // Singleton Setup
     public static LevelManager Instance;
@@ -28,7 +27,7 @@ public class LevelManager : MonoBehaviour
     {
         currentLevel = SceneManager.GetActiveScene().buildIndex;
 
-        ships.AddRange(FindObjectsOfType<Ship>(true));
+        //ships.AddRange(FindObjectsOfType<Ship>(true));
 
         ships[0].transform.SetPositionAndRotation(spawnPoints[nextSpawnIndex].transform.position, spawnPoints[nextSpawnIndex].transform.rotation);
         nextSpawnIndex = (nextSpawnIndex + 1) % (spawnPoints.Count - 1);
@@ -57,7 +56,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            // TODO : Spawn/Activate new ship
+            // Spawn/Activate new ship
             int nextShipIndex = shipsParked % shipsToPark;
             ships[nextShipIndex].transform.SetPositionAndRotation(spawnPoints[nextSpawnIndex].transform.position, spawnPoints[nextSpawnIndex].transform.rotation);
             nextSpawnIndex = (nextSpawnIndex + 1) % (spawnPoints.Count);

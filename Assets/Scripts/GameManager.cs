@@ -46,6 +46,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         // if level is NOT started
         if (!isLevelStarted) { return; }
 
@@ -157,6 +163,9 @@ public class GameManager : MonoBehaviour
             UpdateLivesUI();
         }
 
+        // Reset level time when new level starts
+        timeRemaining = _levelTime;
+
         // TODO : Don't load past final level
         // Load next Scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -169,6 +178,7 @@ public class GameManager : MonoBehaviour
     public void AddPoints(int points)
     {
         score += points * level;
+        UpdateScoreUI();
     }
 
     /// <summary>

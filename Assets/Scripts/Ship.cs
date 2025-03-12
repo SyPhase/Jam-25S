@@ -68,16 +68,6 @@ public class Ship : MonoBehaviour
         }
     }
 
-    /*
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Finish"))
-        {
-            // TODO : make LevelManager or ShipManager to spawn ships
-        }
-    }
-    */
-
     void OnCollisionEnter(Collision collision)
     {
         // Removes a "life"

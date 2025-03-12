@@ -18,6 +18,11 @@ public class MenuManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         if (Input.anyKeyDown)
         {
             keyPressed = true;
